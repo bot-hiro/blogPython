@@ -1,0 +1,12 @@
+/* Estilos das páginas do Ian (detalhe do post, formulário, categorias) */
+.artigo { max-width: 760px; }
+.artigo-titulo { font-size: clamp(1.8rem, 4.5vw, 2.6rem); line-height: 1.2; margin: 14px 0 10px; }
+
+.capa { display: block; width: 100%; border-radius: 12px; margin: 24px 0; }
+.capa-vazia {
+  height: 280px; display: flex; align-items: center; justify-content: center;
+  background: var(--azul-claro); color: var(--azul);
+}
+
+.texto p { margin: 0 0 18px; font-size: 1.05rem; line-height: 1.7; }
+.voltar { margin-top: 36px; }

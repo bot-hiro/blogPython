@@ -30,4 +30,12 @@ def home():
     )
 
 
-# TODO (Ian): detalhe do post, meus posts, formulário de post, lista de categorias
+@bp.route("/post/<slug>")
+def detalhe(slug):
+    """Só posts PUBLICADOS aparecem ao público; cada abertura soma 1 visualização."""
+    post = Post.query.filter_by(slug=slug, status="PUBLICADO").first_or_404()
+    post.registrar_visualizacao()
+    return render_template("ian/detalhe.html", post=post)
+
+
+# TODO (Ian): meus posts, formulário de post, lista de categorias

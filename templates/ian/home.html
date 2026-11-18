@@ -22,7 +22,7 @@
     {% for post in posts %}
     <article class="cartao">
       <span class="etiqueta">{{ post.categoria.nome }}</span>
-      <h2><a href="#">{{ post.titulo }}</a></h2>
+      <h2><a href="{{ url_for('ian.detalhe', slug=post.slug) }}">{{ post.titulo }}</a></h2>
       <p class="resumo">{{ post.resumo }}</p>
       <p class="meta">
         {{ post.autor.nome }} · {{ post.data_publicacao.strftime('%d/%m/%Y') }} ·
