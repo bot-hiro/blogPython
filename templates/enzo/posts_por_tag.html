@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titulo %}{{ tag.nome }} · Tags · Blog{% endblock %}
+
+{% block conteudo %}
+<section class="pagina">
+  <p><a href="{{ url_for('enzo.listar_tags') }}">← Todas as tags</a></p>
+  <h1 class="titulo-grande">Posts com a tag {{ tag.nome }}</h1>
+  {% if posts %}
+    <div class="grade-posts">
+      {% for post in posts %}
+        <article class="cartao">
+          <span class="etiqueta">{{ post.categoria.nome }}</span>
+          <h2><a href="{{ url_for('ian.detalhe', slug=post.slug) }}">{{ post.titulo }}</a></h2>
+          {% if post.resumo %}<p class="resumo">{{ post.resumo }}</p>{% endif %}
+          <p class="meta">{{ post.autor.nome }}{% if post.data_publicacao %} · {{ post.data_publicacao.strftime('%d/%m/%Y') }}{% endif %}</p>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="vazio">Nenhum post publicado com essa tag.</p>
+  {% endif %}
+</section>
+{% endblock %}

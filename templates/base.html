@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block titulo %}Blog{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/enzo.css') }}">
   {% block css_extra %}{% endblock %}
 </head>
 <body>
@@ -14,9 +15,12 @@
       <nav class="menu" aria-label="Principal">
         <a href="{{ url_for('ian.home') }}" class="{% if request.endpoint == 'ian.home' %}ativo{% endif %}">Início</a>
         <a href="#">Categorias</a>
-        <a href="#">Tags</a>
+        <a href="{{ url_for('enzo.listar_tags') }}" class="{% if request.endpoint in ('enzo.listar_tags', 'enzo.posts_por_tag') %}ativo{% endif %}">Tags</a>
         <a href="#">Favoritos</a>
         {% if current_user.is_authenticated %}
+          {% if current_user.perfil == 'ADMIN' %}
+            <a href="{{ url_for('enzo.dashboard') }}" class="{% if request.endpoint == 'enzo.dashboard' %}ativo{% endif %}">Dashboard</a>
+          {% endif %}
           <a class="botao" href="{{ url_for('amanda.sair') }}">Sair</a>
         {% else %}
           <a class="botao" href="{{ url_for('amanda.login') }}">Entrar</a>

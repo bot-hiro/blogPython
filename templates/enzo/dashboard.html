@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block titulo %}Dashboard · Blog{% endblock %}
+
+{% block conteudo %}
+<section class="pagina">
+  <h1 class="titulo-grande">Dashboard</h1>
+
+  <dl class="grade-posts painel-indicadores">
+    <div class="cartao">
+      <dt class="meta">Posts publicados</dt>
+      <dd>{{ resumo.posts_publicados }}</dd>
+    </div>
+    <div class="cartao">
+      <dt class="meta">Visualizações</dt>
+      <dd>{{ '{:,}'.format(resumo.visualizacoes)|replace(',', '.') }}</dd>
+    </div>
+    <div class="cartao">
+      <dt class="meta">Média de avaliações</dt>
+      <dd>
+        {% if resumo.media_avaliacoes is none %}Sem avaliações
+        {% else %}{{ '%.1f'|format(resumo.media_avaliacoes)|replace('.', ',') }}{% endif %}
+      </dd>
+    </div>
+    <div class="cartao">
+      <dt class="meta">Engajamento médio</dt>
+      <dd>{% if resumo.engajamento_medio is none %}Pendente{% else %}{{ resumo.engajamento_medio }}{% endif %}</dd>
+    </div>
+  </dl>
+
+  <div class="grade-posts painel-graficos">
+    <section class="cartao" aria-labelledby="posts-por-mes">
+      <h2 id="posts-por-mes">Posts por mês</h2>
+      {% if posts_por_mes %}
+      <ul>
+        {% for item in posts_por_mes %}
+        <li>
+          <div class="painel-legenda">
+            <time datetime="{{ item.mes }}">{{ item.mes[5:] }}/{{ item.mes[:4] }}</time>
+            <span>{{ item.total }}</span>
+          </div>
+          <progress aria-label="Posts em {{ item.mes[5:] }}/{{ item.mes[:4] }}" value="{{ item.total }}" max="{{ resumo.posts_publicados }}"></progress>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="meta">Nenhuma data de publicação registrada.</p>
+      {% endif %}
+    </section>
+
+    <section class="cartao" aria-labelledby="posts-por-categoria">
+      <h2 id="posts-por-categoria">Posts por categoria</h2>
+      {% if resumo.posts_por_categoria %}
+      <ul>
+        {% for item in resumo.posts_por_categoria %}
+        <li>
+          <div class="painel-legenda">
+            <span>{{ item.nome }}</span>
+            <span>{{ item.total }} · {{ '%.0f'|format(100 * item.total / resumo.posts_publicados) }}%</span>
+          </div>
+          <progress aria-label="Posts em {{ item.nome }}" value="{{ item.total }}" max="{{ resumo.posts_publicados }}"></progress>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="meta">Nenhum post publicado.</p>
+      {% endif %}
+    </section>
+  </div>
+
+  {% if autor_mais_lido %}
+  <p><strong>Autor mais lido</strong> {{ autor_mais_lido.nome }} · {{ autor_mais_lido.visualizacoes }} visualizações</p>
+  {% endif %}
+  {% if categoria_mais_popular %}
+  <p><strong>Categoria mais popular</strong> {{ categoria_mais_popular.nome }} · {{ categoria_mais_popular.total }} posts</p>
+  {% endif %}
+  {% if ranking is none %}
+  <p class="meta">O ranking por engajamento aguarda a definição do cálculo com Ian.</p>
+  {% endif %}
+</section>
+{% endblock %}
