@@ -1,7 +1,16 @@
 """Post: responsável Ian."""
+import re
+import unicodedata
 from datetime import datetime
 
 from extensoes import db
+
+
+def gerar_slug(texto):
+    """'Olá, Mundo!' vira 'ola-mundo' (usado no endereço do post)."""
+    texto = unicodedata.normalize("NFKD", texto).encode("ascii", "ignore").decode("ascii")
+    texto = re.sub(r"[^a-zA-Z0-9]+", "-", texto).strip("-").lower()
+    return texto or "post"
 
 
 class Post(db.Model):
@@ -24,6 +33,35 @@ class Post(db.Model):
     autor = db.relationship("Usuario", back_populates="posts")
     categoria = db.relationship("Categoria", back_populates="posts")
 
+    # ---------- métodos do Ian ----------
+    @classmethod
+    def criar(cls, titulo, resumo, conteudo, autor_id, categoria_id, imagem_capa=None):
+        """Cria um post como RASCUNHO e devolve o post."""
+        base = gerar_slug(titulo)
+        slug, n = base, 2
+        while cls.query.filter_by(slug=slug).first():  # slug precisa ser único
+            slug = f"{base}-{n}"
+            n += 1
+        post = cls(
+            titulo=titulo, slug=slug, resumo=resumo, conteudo=conteudo,
+            imagem_capa=imagem_capa, autor_id=autor_id, categoria_id=categoria_id,
+        )
+        db.session.add(post)
+        db.session.commit()
+        return post
+
+    def publicar(self):
+        """Muda para PUBLICADO e preenche a data de publicação (só na primeira vez)."""
+        self.status = "PUBLICADO"
+        if self.data_publicacao is None:
+            self.data_publicacao = datetime.utcnow()
+        db.session.commit()
+
+    def registrar_visualizacao(self):
+        """Cada abertura do detalhe soma 1."""
+        self.visualizacoes = (self.visualizacoes or 0) + 1
+        db.session.commit()
+
     def tempo_leitura(self):
         """Minutos de leitura: número de palavras / 200 (mínimo 1)."""
         palavras = len(self.conteudo.split())
@@ -40,5 +78,4 @@ class Post(db.Model):
     def media_avaliacoes(self):
         return None  # TODO (Enzo): usar Avaliacao.media_por_post()
 
-    # TODO (Ian): criar(), editar(), publicar(), arquivar(), excluir(),
-    #             registrar_visualizacao(), adicionar_tag(), remover_tag(), engajamento()
+    # TODO (Ian): editar(), arquivar(), excluir(), adicionar_tag(), remover_tag(), engajamento()

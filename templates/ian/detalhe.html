@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block titulo %}{{ post.titulo }} · Blog{% endblock %}
+{% block css_extra %}<link rel="stylesheet" href="{{ url_for('static', filename='css/ian.css') }}">{% endblock %}
+
+{% block conteudo %}
+<article class="pagina artigo">
+  <span class="etiqueta">{{ post.categoria.nome }}</span>
+  <h1 class="artigo-titulo">{{ post.titulo }}</h1>
+  <p class="meta">
+    {{ post.autor.nome }} · {{ post.data_publicacao.strftime('%d/%m/%Y') }} ·
+    {{ post.tempo_leitura() }} min de leitura · {{ post.visualizacoes }} visualizações
+  </p>
+
+  {% if post.imagem_capa %}
+    <img class="capa" src="{{ post.imagem_capa }}" alt="Capa do post {{ post.titulo }}">
+  {% else %}
+    <div class="capa capa-vazia">Imagem de capa</div>
+  {% endif %}
+
+  <div class="texto">
+    {% for paragrafo in post.conteudo.replace('\r\n', '\n').split('\n\n') %}
+      <p>{{ paragrafo }}</p>
+    {% endfor %}
+  </div>
+
+  <p class="voltar"><a href="{{ url_for('ian.home') }}">← Voltar para o início</a></p>
+</article>
+{% endblock %}
