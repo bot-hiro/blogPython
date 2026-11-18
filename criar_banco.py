@@ -1,8 +1,10 @@
-"""Cria o banco e coloca dados de exemplo. Rode uma vez: python criar_banco.py"""
+"""Cria o banco e coloca dados de exemplo. Rode: python criar_banco.py
+ATENÇÃO: apaga o banco anterior e recria do zero."""
 from datetime import datetime
 
 from app import app
-from models import Categoria, Post, Usuario, db
+from extensoes import db
+from models import Categoria, Post, Usuario
 
 with app.app_context():
     db.drop_all()
