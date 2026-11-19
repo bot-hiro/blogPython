@@ -62,6 +62,28 @@ class Post(db.Model):
         self.visualizacoes = (self.visualizacoes or 0) + 1
         db.session.commit()
 
+    def editar(self, titulo, resumo, conteudo, categoria_id):
+        """Atualiza os dados do post. O slug (endereço) não muda, para os links continuarem valendo."""
+        self.titulo = titulo
+        self.resumo = resumo
+        self.conteudo = conteudo
+        self.categoria_id = categoria_id
+        self.data_atualizacao = datetime.utcnow()
+        db.session.commit()
+
+    def arquivar(self):
+        """Tira o post do público sem apagar (status ARQUIVADO)."""
+        self.status = "ARQUIVADO"
+        self.data_atualizacao = datetime.utcnow()
+        db.session.commit()
+
+    def excluir(self):
+        """Apaga o post de vez.
+        TODO (grupo): quando Comentario, Curtida, Avaliacao, Favorito e Post_Tag estiverem
+        prontos, apague também os registros ligados a este post antes de apagar o post."""
+        db.session.delete(self)
+        db.session.commit()
+
     def tempo_leitura(self):
         """Minutos de leitura: número de palavras / 200 (mínimo 1)."""
         palavras = len(self.conteudo.split())
@@ -80,4 +102,4 @@ class Post(db.Model):
 
         return Avaliacao.media_por_post(self.id)
 
-    # TODO (Ian): editar(), arquivar(), excluir(), adicionar_tag(), remover_tag(), engajamento()
+    # TODO (Ian): adicionar_tag(), remover_tag(), engajamento()

@@ -25,11 +25,20 @@
         <span class="status status-{{ post.status|lower }}">{{ post.status|capitalize }}</span>
         {% if post.status == 'PUBLICADO' %}
           <a class="botao botao-claro" href="{{ url_for('ian.detalhe', slug=post.slug) }}">Ver</a>
-        {% else %}
+        {% endif %}
+        <a class="botao botao-claro" href="{{ url_for('ian.editar_post', post_id=post.id) }}">Editar</a>
+        {% if post.status != 'PUBLICADO' %}
           <form method="post" action="{{ url_for('ian.publicar_post', post_id=post.id) }}">
             <button type="submit" class="botao">Publicar</button>
           </form>
+        {% else %}
+          <form method="post" action="{{ url_for('ian.arquivar_post', post_id=post.id) }}">
+            <button type="submit" class="botao botao-claro">Arquivar</button>
+          </form>
         {% endif %}
+        <form method="post" action="{{ url_for('ian.excluir_post', post_id=post.id) }}" onsubmit="return confirm('Excluir este post de vez?');">
+          <button type="submit" class="botao botao-perigo">Excluir</button>
+        </form>
       </div>
     </article>
     {% endfor %}

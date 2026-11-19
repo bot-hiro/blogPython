@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titulo %}Gerenciar categorias · Blog{% endblock %}
+{% block css_extra %}<link rel="stylesheet" href="{{ url_for('static', filename='css/ian.css') }}">{% endblock %}
+
+{% block conteudo %}
+<section class="pagina">
+  <h1 class="titulo-medio">Gerenciar categorias</h1>
+
+  {% for categoria_msg, msg in get_flashed_messages(with_categories=true) %}
+    <p class="{{ 'erro' if categoria_msg == 'erro' else 'aviso-ok' }}" role="alert">{{ msg }}</p>
+  {% endfor %}
+
+  <form class="cartao-form form-linha" method="post" action="{{ url_for('ian.admin_categorias') }}">
+    <input name="nome" type="text" maxlength="60" placeholder="Nome da nova categoria" aria-label="Nome da nova categoria" required>
+    <input name="descricao" type="text" maxlength="200" placeholder="Descrição (opcional)" aria-label="Descrição">
+    <button type="submit" class="botao">Criar categoria</button>
+  </form>
+
+  <div class="lista-posts">
+    {% for c in categorias %}
+    <article class="linha-post">
+      <form class="form-linha" method="post" action="{{ url_for('ian.editar_categoria', categoria_id=c.id) }}">
+        <input name="nome" type="text" maxlength="60" value="{{ c.nome }}" aria-label="Nome" required>
+        <input name="descricao" type="text" maxlength="200" value="{{ c.descricao or '' }}" aria-label="Descrição">
+        <button type="submit" class="botao botao-claro">Salvar</button>
+      </form>
+      <div class="linha-post-acoes">
+        <span class="meta">{{ c.posts|length }} posts</span>
+        <form method="post" action="{{ url_for('ian.excluir_categoria', categoria_id=c.id) }}" onsubmit="return confirm('Excluir esta categoria?');">
+          <button type="submit" class="botao botao-perigo">Excluir</button>
+        </form>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <p class="voltar"><a href="{{ url_for('ian.categorias') }}">← Ver categorias</a></p>
+</section>
+{% endblock %}

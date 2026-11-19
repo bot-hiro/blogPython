@@ -57,3 +57,12 @@
 @media (max-width: 800px) {
   .form-post { grid-template-columns: 1fr; }
 }
+
+/* Botões extras e formulários em linha (categorias, ações) */
+.botao-perigo { background: var(--superficie); color: var(--erro); border: 1px solid var(--erro); }
+.botao-perigo:hover { background: var(--erro-fundo); }
+.form-linha { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.form-linha input { flex: 1 1 180px; width: auto; }
+.cartao-form.form-linha { margin-bottom: 8px; }
+.linha-post-acoes { flex-wrap: wrap; }
+.cartao h2 a { word-break: break-word; }
