@@ -13,7 +13,7 @@ from models.comentario import Comentario
 from extensoes import db
 
 
-bp = Blueprint("amanda", _name_)
+bp = Blueprint("amanda", __name__)
 
 
 @bp.route("/login", methods=["GET", "POST"])
