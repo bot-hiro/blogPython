@@ -1,4 +1,6 @@
-/* Estilos das páginas do Ian (detalhe do post, formulário, categorias) */
+/* Estilos das páginas do Ian (detalhe do post, formulário, meus posts) */
+
+/* Detalhe do post */
 .artigo { max-width: 760px; }
 .artigo-titulo { font-size: clamp(1.8rem, 4.5vw, 2.6rem); line-height: 1.2; margin: 14px 0 10px; }
 
@@ -10,3 +12,48 @@
 
 .texto p { margin: 0 0 18px; font-size: 1.05rem; line-height: 1.7; }
 .voltar { margin-top: 36px; }
+
+/* Títulos de página interna */
+.titulo-medio { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 0 0 24px; }
+
+/* Formulário de post */
+.form-post { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; }
+.cartao-form {
+  background: var(--superficie); border: 1px solid var(--borda);
+  border-radius: 12px; padding: 20px;
+}
+.cartao-form label { display: block; font-weight: 700; font-size: 0.85rem; margin: 14px 0 6px; }
+.cartao-form label:first-child { margin-top: 0; }
+.cartao-form input, .cartao-form select, .cartao-form textarea { width: 100%; }
+.cartao-form textarea { font: inherit; resize: vertical; }
+.dica { color: var(--texto-suave); font-size: 0.85rem; margin: 10px 0 0; }
+.lateral-form { display: flex; flex-direction: column; gap: 16px; }
+.acoes-form { display: flex; gap: 12px; }
+.acoes-form .botao { flex: 1; }
+
+.botao-claro {
+  background: var(--superficie); color: var(--texto); border: 1px solid var(--borda);
+}
+.botao-claro:hover { background: var(--fundo); }
+
+.aviso-ok { background: #e6f4ea; color: #1e5b2f; padding: 10px 12px; border-radius: 8px; font-size: 0.9rem; }
+
+/* Meus posts */
+.cabecalho-lista { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+.cabecalho-lista .titulo-medio { margin: 0; }
+.lista-posts { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+.linha-post {
+  background: var(--superficie); border: 1px solid var(--borda); border-radius: 12px;
+  padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.linha-post h2 { font-size: 1.1rem; margin: 0 0 4px; }
+.linha-post-acoes { display: flex; align-items: center; gap: 12px; }
+.linha-post-acoes form { margin: 0; }
+.status { font-size: 0.8rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+.status-rascunho { background: #fff3d6; color: #7a4b00; }
+.status-publicado { background: #e6f4ea; color: #1e5b2f; }
+.status-arquivado { background: #ececec; color: #444; }
+
+@media (max-width: 800px) {
+  .form-post { grid-template-columns: 1fr; }
+}

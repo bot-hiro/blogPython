@@ -16,6 +16,9 @@
         <a href="#">Categorias</a>
         <a href="#">Tags</a>
         <a href="#">Favoritos</a>
+        {% if current_user.is_authenticated and current_user.perfil in ['AUTOR', 'ADMIN'] %}
+          <a href="{{ url_for('ian.meus_posts') }}" class="{% if request.endpoint == 'ian.meus_posts' %}ativo{% endif %}">Meus posts</a>
+        {% endif %}
         {% if current_user.is_authenticated %}
           <a class="botao" href="{{ url_for('amanda.sair') }}">Sair</a>
         {% else %}
