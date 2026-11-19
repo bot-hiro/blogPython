@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block titulo %}Tags · Blog{% endblock %}
+
+{% block conteudo %}
+<section class="pagina">
+  <h1 class="titulo-grande">Tags</h1>
+  {% for mensagem in get_flashed_messages(category_filter=['enzo_erro']) %}
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  {% endfor %}
+  {% set gerenciar = current_user.is_authenticated and current_user.perfil == 'ADMIN' %}
+  {% if gerenciar %}
+    {% set token = csrf_enzo() %}
+    <form class="form-tag-nova" method="post" action="{{ url_for('enzo.criar_tag') }}">
+      <input type="hidden" name="csrf_token" value="{{ token }}">
+      <label for="nova-tag">Nome da nova tag</label>
+      <div class="controles-tag">
+        <input id="nova-tag" name="nome" maxlength="40" required>
+        <button class="botao" type="submit">Criar tag</button>
+      </div>
+    </form>
+  {% endif %}
+
+  {% if tags and gerenciar %}
+    <div class="grade-posts">
+      {% for tag in tags %}
+        <article class="cartao">
+          <h2><a href="{{ url_for('enzo.posts_por_tag', slug=tag.slug) }}">{{ tag.nome }}</a></h2>
+          <form method="post" action="{{ url_for('enzo.editar_tag', tag_id=tag.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ token }}">
+            <label for="tag-{{ tag.id }}">Nome da tag</label>
+            <div class="controles-tag">
+              <input id="tag-{{ tag.id }}" name="nome" value="{{ tag.nome }}" maxlength="40" required>
+              <button class="botao botao-enzo" type="submit">Salvar</button>
+            </div>
+          </form>
+          <form class="form-tag-excluir" method="post" action="{{ url_for('enzo.excluir_tag', tag_id=tag.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ token }}">
+            <button class="botao botao-enzo" type="submit" aria-label="Excluir tag {{ tag.nome }}">Excluir</button>
+          </form>
+        </article>
+      {% endfor %}
+    </div>
+  {% elif tags %}
+    <ul class="lista-tags">
+      {% for tag in tags %}
+        <li><a class="etiqueta" href="{{ url_for('enzo.posts_por_tag', slug=tag.slug) }}">{{ tag.nome }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="vazio">Nenhuma tag cadastrada.</p>
+  {% endif %}
+</section>
+{% endblock %}

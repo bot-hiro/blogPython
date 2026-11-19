@@ -1,0 +1,41 @@
+<section class="interacoes-enzo" id="interacoes" aria-label="Curtidas e avaliações">
+  {% for mensagem in get_flashed_messages(category_filter=['enzo_erro']) %}
+    <p class="erro" role="alert">{{ mensagem }}</p>
+  {% endfor %}
+  {% set total_curtidas = post.total_curtidas() %}
+  {% set media = post.media_avaliacoes() %}
+  {% if current_user.is_authenticated %}
+    {% set estado = estado_interacoes_enzo(post.id) %}
+    {% set token = csrf_enzo() %}
+    <div class="controles-enzo">
+      <form method="post" action="{{ url_for('enzo.curtir_post', slug=post.slug) }}">
+        <input type="hidden" name="csrf_token" value="{{ token }}">
+        <button class="botao botao-enzo {% if estado.curtiu %}selecionado{% endif %}" type="submit"
+                aria-pressed="{{ 'true' if estado.curtiu else 'false' }}" name="acao"
+                value="{{ 'descurtir' if estado.curtiu else 'curtir' }}">
+          {{ 'Descurtir' if estado.curtiu else 'Curtir' }} ({{ total_curtidas }})
+        </button>
+      </form>
+      <form class="notas-enzo" method="post" action="{{ url_for('enzo.avaliar_post', slug=post.slug) }}">
+        <input type="hidden" name="csrf_token" value="{{ token }}">
+        <span class="meta">Sua avaliação</span>
+        <div class="opcoes-nota" role="group" aria-label="Notas de 1 a 5">
+          {% for nota in range(1, 6) %}
+            <button class="botao botao-enzo {% if nota == estado.nota %}selecionado{% endif %}"
+                    type="submit" name="nota" value="{{ nota }}" aria-label="Dar nota {{ nota }}"
+                    aria-pressed="{{ 'true' if nota == estado.nota else 'false' }}">{{ nota }}</button>
+          {% endfor %}
+        </div>
+      </form>
+    </div>
+  {% else %}
+    <div class="controles-enzo">
+      <span class="meta">{{ total_curtidas }} {{ 'curtida' if total_curtidas == 1 else 'curtidas' }}</span>
+      <a href="{{ url_for('amanda.login') }}">Entre para curtir e avaliar</a>
+    </div>
+  {% endif %}
+  <p class="meta">
+    {% if media is not none %}Média {{ '%.1f'|format(media)|replace('.', ',') }} de 5
+    {% else %}Sem avaliações{% endif %}
+  </p>
+</section>

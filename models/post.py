@@ -89,15 +89,17 @@ class Post(db.Model):
         palavras = len(self.conteudo.split())
         return max(1, round(palavras / 200))
 
-    # Estes três devolvem valores provisórios. Enzo e Amanda: quando a sua
-    # classe estiver pronta, troquem o "return" pela contagem real.
     def total_curtidas(self):
-        return 0  # TODO (Enzo): usar Curtida.contar_por_post()
+        from models.curtida import Curtida
+
+        return Curtida.contar_por_post(self.id)
 
     def total_comentarios(self):
         return 0  # TODO (Amanda): só comentários APROVADOS
 
     def media_avaliacoes(self):
-        return None  # TODO (Enzo): usar Avaliacao.media_por_post()
+        from models.avaliacao import Avaliacao
+
+        return Avaliacao.media_por_post(self.id)
 
     # TODO (Ian): adicionar_tag(), remover_tag(), engajamento()
