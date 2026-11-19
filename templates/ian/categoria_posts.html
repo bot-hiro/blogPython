@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}{{ categoria.nome }} · Blog{% endblock %}
+{% block css_extra %}<link rel="stylesheet" href="{{ url_for('static', filename='css/ian.css') }}">{% endblock %}
+
+{% block conteudo %}
+<section class="pagina">
+  <h1 class="titulo-medio">{{ categoria.nome }}</h1>
+  <p class="subtitulo">{{ categoria.descricao or '' }}</p>
+
+  {% if posts %}
+  <div class="grade-posts">
+    {% for post in posts %}
+    <article class="cartao">
+      <span class="etiqueta">{{ post.categoria.nome }}</span>
+      <h2><a href="{{ url_for('ian.detalhe', slug=post.slug) }}">{{ post.titulo }}</a></h2>
+      <p class="resumo">{{ post.resumo }}</p>
+      <p class="meta">
+        {{ post.autor.nome }} · {{ post.data_publicacao.strftime('%d/%m/%Y') }} ·
+        {{ post.tempo_leitura() }} min de leitura
+      </p>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="vazio">Ainda não há posts publicados nesta categoria.</p>
+  {% endif %}
+
+  <p class="voltar"><a href="{{ url_for('ian.categorias') }}">← Todas as categorias</a></p>
+</section>
+{% endblock %}

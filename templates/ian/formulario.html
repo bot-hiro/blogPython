@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block titulo %}{% if post %}Editar post{% else %}Novo post{% endif %} · Blog{% endblock %}
+{% block css_extra %}<link rel="stylesheet" href="{{ url_for('static', filename='css/ian.css') }}">{% endblock %}
+
+{% block conteudo %}
+<section class="pagina">
+  <h1 class="titulo-medio">{% if post %}Editar post{% else %}Novo post{% endif %}</h1>
+
+  {% for categoria_msg, msg in get_flashed_messages(with_categories=true) %}
+    <p class="{{ 'erro' if categoria_msg == 'erro' else 'aviso-ok' }}" role="alert">{{ msg }}</p>
+  {% endfor %}
+
+  <form class="form-post" method="post">
+    <div class="cartao-form">
+      <label for="titulo">Título</label>
+      <input id="titulo" name="titulo" type="text" maxlength="150" placeholder="Título do post" value="{{ form.get('titulo', '') }}" required>
+
+      <label for="resumo">Resumo</label>
+      <textarea id="resumo" name="resumo" rows="3" maxlength="300">{{ form.get('resumo', '') }}</textarea>
+
+      <label for="conteudo">Conteúdo</label>
+      <textarea id="conteudo" name="conteudo" rows="14" required>{{ form.get('conteudo', '') }}</textarea>
+      <p class="dica">Para separar parágrafos, deixe uma linha em branco entre eles.</p>
+    </div>
+
+    <div class="lateral-form">
+      <div class="cartao-form">
+        <label for="categoria">Categoria</label>
+        <select id="categoria" name="categoria" required>
+          <option value="">Escolha uma categoria</option>
+          {% for c in categorias %}
+            <option value="{{ c.id }}" {% if form.get('categoria', '') == c.id|string %}selected{% endif %}>{{ c.nome }}</option>
+          {% endfor %}
+        </select>
+        <p class="dica">Tags e imagem de capa entram em uma próxima versão.</p>
+      </div>
+
+      <div class="acoes-form">
+        {% if post %}
+          <button type="submit" name="acao" value="salvar" class="botao botao-claro">Salvar alterações</button>
+          {% if post.status != 'PUBLICADO' %}
+            <button type="submit" name="acao" value="publicar" class="botao">Publicar</button>
+          {% endif %}
+        {% else %}
+          <button type="submit" name="acao" value="rascunho" class="botao botao-claro">Salvar rascunho</button>
+          <button type="submit" name="acao" value="publicar" class="botao">Publicar</button>
+        {% endif %}
+      </div>
+      <p class="voltar"><a href="{{ url_for('ian.meus_posts') }}">← Voltar para Meus posts</a></p>
+    </div>
+  </form>
+</section>
+{% endblock %}

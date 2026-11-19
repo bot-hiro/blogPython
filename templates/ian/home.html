@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo %}Início · Blog{% endblock %}
+
+{% block conteudo %}
+<section class="pagina">
+  <h1 class="titulo-grande">Ideias, estudos e projetos</h1>
+  <p class="subtitulo">Artigos escritos pela equipe do blog.</p>
+
+  <form class="busca" method="get" action="{{ url_for('ian.home') }}">
+    <input type="search" name="q" value="{{ busca }}" placeholder="Buscar posts" aria-label="Buscar posts">
+    <select name="categoria" aria-label="Categoria">
+      <option value="">Todas as categorias</option>
+      {% for c in categorias %}
+        <option value="{{ c.id }}" {% if c.id == categoria_id %}selected{% endif %}>{{ c.nome }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="botao">Buscar</button>
+  </form>
+
+  {% if posts %}
+  <div class="grade-posts">
+    {% for post in posts %}
+    <article class="cartao">
+      <span class="etiqueta">{{ post.categoria.nome }}</span>
+      <h2><a href="{{ url_for('ian.detalhe', slug=post.slug) }}">{{ post.titulo }}</a></h2>
+      <p class="resumo">{{ post.resumo }}</p>
+      <p class="meta">
+        {{ post.autor.nome }} · {{ post.data_publicacao.strftime('%d/%m/%Y') }} ·
+        {{ post.tempo_leitura() }} min de leitura ·
+        {{ post.total_curtidas() }} curtidas ·
+        {{ post.total_comentarios() }} comentários
+        {% if post.media_avaliacoes() %}· {{ '%.1f'|format(post.media_avaliacoes())|replace('.', ',') }}{% endif %}
+      </p>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="vazio">Nenhum post encontrado. Tente outra busca ou escolha outra categoria.</p>
+  {% endif %}
+
+  <form class="newsletter" method="post" action="#">
+    <div>
+      <h2>Receba os novos posts por e-mail</h2>
+      <p>Cancele quando quiser.</p>
+    </div>
+    <div class="newsletter-campos">
+      <input type="email" placeholder="seu@email.com" aria-label="Seu e-mail">
+      <button type="button" class="botao">Assinar</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

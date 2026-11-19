@@ -18,7 +18,11 @@ class Comentario(db.Model):
     # Relacionamentos
     post = db.relationship("Post", back_populates="comentarios")
     usuario = db.relationship("Usuario", back_populates="comentarios")
-    respostas = db.relationship("Comentario", backref="pai", remote_side=[id])
+   respostas = db.relationship(
+    "Comentario",
+    backref=db.backref("pai", remote_side=[id]),
+    cascade="all, delete-orphan",
+)
     
 
     def comentar(self):

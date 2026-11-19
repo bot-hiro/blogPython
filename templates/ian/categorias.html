@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block titulo %}Categorias · Blog{% endblock %}
+{% block css_extra %}<link rel="stylesheet" href="{{ url_for('static', filename='css/ian.css') }}">{% endblock %}
+
+{% block conteudo %}
+<section class="pagina">
+  <div class="cabecalho-lista">
+    <h1 class="titulo-medio">Categorias</h1>
+    {% if current_user.is_authenticated and current_user.perfil == 'ADMIN' %}
+      <a class="botao botao-claro" href="{{ url_for('ian.admin_categorias') }}">Gerenciar categorias</a>
+    {% endif %}
+  </div>
+
+  {% if categorias %}
+  <div class="grade-posts">
+    {% for c in categorias %}
+    <article class="cartao">
+      <h2><a href="{{ url_for('ian.posts_por_categoria', slug=c.slug) }}">{{ c.nome }}</a></h2>
+      <p class="resumo">{{ c.descricao or 'Sem descrição.' }}</p>
+      <p class="meta">{{ c.total_posts() }} posts · {{ '%.1f'|format(c.percentual_do_blog())|replace('.', ',') }}% do blog</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="vazio">Ainda não há categorias.</p>
+  {% endif %}
+</section>
+{% endblock %}
