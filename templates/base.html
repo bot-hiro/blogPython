@@ -17,6 +17,9 @@
         <a href="#">Categorias</a>
         <a href="{{ url_for('enzo.listar_tags') }}" class="{% if request.endpoint in ('enzo.listar_tags', 'enzo.posts_por_tag') %}ativo{% endif %}">Tags</a>
         <a href="#">Favoritos</a>
+        {% if current_user.is_authenticated and current_user.perfil in ['AUTOR', 'ADMIN'] %}
+          <a href="{{ url_for('ian.meus_posts') }}" class="{% if request.endpoint == 'ian.meus_posts' %}ativo{% endif %}">Meus posts</a>
+        {% endif %}
         {% if current_user.is_authenticated %}
           {% if current_user.perfil == 'ADMIN' %}
             <a href="{{ url_for('enzo.dashboard') }}" class="{% if request.endpoint == 'enzo.dashboard' %}ativo{% endif %}">Dashboard</a>

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}Meus posts · Blog{% endblock %}
+{% block css_extra %}<link rel="stylesheet" href="{{ url_for('static', filename='css/ian.css') }}">{% endblock %}
+
+{% block conteudo %}
+<section class="pagina">
+  <div class="cabecalho-lista">
+    <h1 class="titulo-medio">Meus posts</h1>
+    <a class="botao" href="{{ url_for('ian.novo_post') }}">Novo post</a>
+  </div>
+
+  {% for categoria_msg, msg in get_flashed_messages(with_categories=true) %}
+    <p class="{{ 'erro' if categoria_msg == 'erro' else 'aviso-ok' }}" role="alert">{{ msg }}</p>
+  {% endfor %}
+
+  {% if posts %}
+  <div class="lista-posts">
+    {% for post in posts %}
+    <article class="linha-post">
+      <div>
+        <h2>{{ post.titulo }}</h2>
+        <p class="meta">{{ post.categoria.nome }} · {{ post.autor.nome }} · criado em {{ post.data_criacao.strftime('%d/%m/%Y') }}</p>
+      </div>
+      <div class="linha-post-acoes">
+        <span class="status status-{{ post.status|lower }}">{{ post.status|capitalize }}</span>
+        {% if post.status == 'PUBLICADO' %}
+          <a class="botao botao-claro" href="{{ url_for('ian.detalhe', slug=post.slug) }}">Ver</a>
+        {% else %}
+          <form method="post" action="{{ url_for('ian.publicar_post', post_id=post.id) }}">
+            <button type="submit" class="botao">Publicar</button>
+          </form>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="vazio">Você ainda não escreveu nenhum post. Clique em "Novo post" para começar.</p>
+  {% endif %}
+</section>
+{% endblock %}
