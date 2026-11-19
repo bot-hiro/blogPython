@@ -13,7 +13,7 @@
       <a class="logo" href="{{ url_for('ian.home') }}">Blog</a>
       <nav class="menu" aria-label="Principal">
         <a href="{{ url_for('ian.home') }}" class="{% if request.endpoint == 'ian.home' %}ativo{% endif %}">Início</a>
-        <a href="#">Categorias</a>
+        <a href="{{ url_for('ian.categorias') }}" class="{% if request.endpoint in ['ian.categorias', 'ian.posts_por_categoria'] %}ativo{% endif %}">Categorias</a>
         <a href="#">Tags</a>
         <a href="#">Favoritos</a>
         {% if current_user.is_authenticated and current_user.perfil in ['AUTOR', 'ADMIN'] %}

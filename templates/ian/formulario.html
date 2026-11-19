@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block titulo %}Novo post · Blog{% endblock %}
+{% block titulo %}{% if post %}Editar post{% else %}Novo post{% endif %} · Blog{% endblock %}
 {% block css_extra %}<link rel="stylesheet" href="{{ url_for('static', filename='css/ian.css') }}">{% endblock %}
 
 {% block conteudo %}
 <section class="pagina">
-  <h1 class="titulo-medio">Novo post</h1>
+  <h1 class="titulo-medio">{% if post %}Editar post{% else %}Novo post{% endif %}</h1>
 
   {% for categoria_msg, msg in get_flashed_messages(with_categories=true) %}
     <p class="{{ 'erro' if categoria_msg == 'erro' else 'aviso-ok' }}" role="alert">{{ msg }}</p>
@@ -36,9 +36,17 @@
       </div>
 
       <div class="acoes-form">
-        <button type="submit" name="acao" value="rascunho" class="botao botao-claro">Salvar rascunho</button>
-        <button type="submit" name="acao" value="publicar" class="botao">Publicar</button>
+        {% if post %}
+          <button type="submit" name="acao" value="salvar" class="botao botao-claro">Salvar alterações</button>
+          {% if post.status != 'PUBLICADO' %}
+            <button type="submit" name="acao" value="publicar" class="botao">Publicar</button>
+          {% endif %}
+        {% else %}
+          <button type="submit" name="acao" value="rascunho" class="botao botao-claro">Salvar rascunho</button>
+          <button type="submit" name="acao" value="publicar" class="botao">Publicar</button>
+        {% endif %}
       </div>
+      <p class="voltar"><a href="{{ url_for('ian.meus_posts') }}">← Voltar para Meus posts</a></p>
     </div>
   </form>
 </section>
