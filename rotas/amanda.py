@@ -11,7 +11,7 @@ from models.favorito import Favorito
 from models.inscrito import Inscrito
 from models.comentario import Comentario 
 from extensoes import db
-
+from models.post import Post
 
 bp = Blueprint("amanda", __name__)
 
@@ -60,7 +60,7 @@ def cadastro():
 @bp.route("/meu-perfil")
 @login_required
 def meu_perfil():
-    # Aqui o Flask-Login já nos dá o current_user
+    #o Flask-Login dá o current_user
     return render_template("amanda/perfil.html", usuario=current_user)
 
 
@@ -82,7 +82,8 @@ def favoritar(post_id):
         flash("Você já favoritou este post.")
     
     # Redireciona para a página do post (assumindo que o Ian criou essa rota)
-    return redirect(url_for("ian.detalhe_post", post_id=post_id))
+    post = Post.query.get_or_404(post_id)
+    return redirect(url_for("ian.detalhe", slug=post.slug))
 
 
 @bp.route("/comentar/<int:post_id>", methods=["POST"])
@@ -98,7 +99,8 @@ def comentar(post_id):
         novo_comentario.comentar() # Salva como PENDENTE
         flash("Comentário enviado! Ele aparecerá após a aprovação do admin.")
     
-    return redirect(url_for("ian.detalhe_post", post_id=post_id))
+    post = Post.query.get_or_404(post_id)
+    return redirect(url_for("ian.detalhe", slug=post.slug))
 
 
 @bp.route("/moderacao")
