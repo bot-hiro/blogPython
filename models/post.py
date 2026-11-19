@@ -32,6 +32,8 @@ class Post(db.Model):
 
     autor = db.relationship("Usuario", back_populates="posts")
     categoria = db.relationship("Categoria", back_populates="posts")
+    favoritos = db.relationship("Favorito", back_populates="post", cascade="all, delete-orphan")
+    comentarios = db.relationship("Comentario", back_populates="post", cascade="all, delete-orphan")
 
     # ---------- métodos do Ian ----------
     @classmethod
@@ -79,8 +81,8 @@ class Post(db.Model):
 
     def excluir(self):
         """Apaga o post de vez.
-        TODO (grupo): quando Comentario, Curtida, Avaliacao, Favorito e Post_Tag estiverem
-        prontos, apague também os registros ligados a este post antes de apagar o post."""
+        TODO (grupo): quando Curtida, Avaliacao e Post_Tag estiverem prontos,
+        apague também os registros ligados a este post antes de apagar o post."""
         db.session.delete(self)
         db.session.commit()
 
@@ -95,7 +97,8 @@ class Post(db.Model):
         return Curtida.contar_por_post(self.id)
 
     def total_comentarios(self):
-        return 0  # TODO (Amanda): só comentários APROVADOS
+        """Só comentários APROVADOS contam."""
+        return sum(1 for c in self.comentarios if c.status == "APROVADO")
 
     def media_avaliacoes(self):
         from models.avaliacao import Avaliacao
